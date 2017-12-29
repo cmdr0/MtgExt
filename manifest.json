@@ -1,0 +1,16 @@
+{
+    "manifest_version": 2,
+    "name":             "MtgExt",
+    "version":          "0.0.1",
+
+    "content_scripts": [
+        {
+            "matches": ["http://gatherer.wizards.com/Pages/Search/Default.aspx*"],
+            "js":      ["gatherer.js"]
+        }
+    ],
+
+    "background": {
+        "scripts": ["background.js"]
+    }
+}
