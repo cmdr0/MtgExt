@@ -3,12 +3,16 @@
     "name":             "MtgExt",
     "version":          "0.0.1",
 
+    "permissions": ["tabs"],
+
     "content_scripts": [
         {
             "matches": ["http://gatherer.wizards.com/Pages/Search/Default.aspx*"],
             "js":      ["gatherer.js"]
         }
     ],
+
+    "browser_action": {},
 
     "background": {
         "scripts": ["background.js"]
