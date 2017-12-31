@@ -1,13 +1,14 @@
 window.onbeforeunload = () => chrome.runtime.sendMessage({command: "reload"})
 
 // TODO: Create strings object
-console.log("MtgExt 0.0.1 Running...")
+console.log('MtgExt 0.0.1 Running...')
 
-let trs = document.querySelectorAll("tr.cardItem")
+let trs = document.querySelectorAll('tr.cardItem')
 let cardEntries = [];
 trs.forEach(tr => {
   cardEntries.push(new StandardViewCardEntry(tr))
 })
+cardEntries.forEach(entry => entry.userCell)
 
 
 function StandardViewCardEntry (rowElement) {
@@ -15,16 +16,26 @@ function StandardViewCardEntry (rowElement) {
   let userCell = document.createElement('td')
   rowElement.appendChild(userCell)
 
-  let getName = _ => rowElement.querySelector("span.cardTitle").innerText
+  let getName = _ => rowElement.querySelector('span.cardTitle').innerText
   let getMultiverseIDs = _ => {
-    let linkElements = rowElement.querySelectorAll("td.setVersions a")
-    let urls = []
-    linkElements.forEach(link => urls.push(link.href.split('=')[1]))
-    return urls
+    let linkElements = rowElement.querySelectorAll('td.setVersions a')
+    let ids = []
+    linkElements.forEach(link => ids.push(link.href.split('=')[1]))
+    return ids
   }
+  let getCardSetElements = _ => rowElement.querySelectorAll('td.setVersions img')
+
   // Public
-  return {
+  let publicOut = {
     name: getName(),
     multiverseIDs: getMultiverseIDs(),
+    cardSetElements: getCardSetElements(),
+    update: function() {
+      userCell.innerHTML = ''
+      let ul = document.createElement('ul')
+      // TODO TODO TODO
+    }
   }
+
+  return publicOut
 }
