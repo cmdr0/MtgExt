@@ -29,7 +29,7 @@ let chromeStorageHandler = (_ => {
       try {
         let out = await syncGet('bins') || []
         return out
-      } catch {
+      } catch (error) {
         logError(error)
         return false
       }
@@ -44,7 +44,7 @@ let chromeStorageHandler = (_ => {
           await syncSet('bins', bins)
         }
         return true
-      } catch {
+      } catch (error) {
         logError(error)
         return false
       }
@@ -78,7 +78,7 @@ let chromeStorageHandler = (_ => {
       }
     },
 
-    unbinCard: async function (multiverseID, binName) {
+    removeCard: async function (multiverseID, binName) {
       try {
         let cardLocations = await this.getCardLocations(multiverseID)
         let index = cardLocations.indexOf(binName)

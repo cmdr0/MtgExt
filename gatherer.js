@@ -1,4 +1,5 @@
-window.onbeforeunload = () => chrome.runtime.sendMessage({command: "reload"})
+// TODO: Wrap this into messageHandler format, update messageHandler to handle it
+  chrome.runtime.sendMessage({cmd:'db getBins'}, data => console.log(data))
 
 // TODO: Create strings object
 console.log('MtgExt 0.0.1 Running...')

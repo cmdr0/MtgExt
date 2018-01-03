@@ -15,6 +15,9 @@
     "browser_action": {},
 
     "background": {
-        "scripts": ["background.js", "chromeSyncHandler.js"]
+        "scripts": [
+            "background/chromeStorageHandler.js",
+            "background/messageHandler.js"      // MUST STAY LAST
+        ]
     }
 }
