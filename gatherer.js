@@ -23,7 +23,7 @@ function StandardViewCardEntry (rowElement) {
     linkElements.forEach(link => ids.push(link.href.split('=')[1]))
     return ids
   }
-  let getCardSetElements = _ => rowElement.querySelectorAll('td.setVersions img')
+  let getCardSetElements = _ => rowElement.querySelectorAll('td.setVersions a')
 
   // Public
   let publicOut = {
@@ -33,9 +33,15 @@ function StandardViewCardEntry (rowElement) {
     update: function() {
       userCell.innerHTML = ''
       let ul = document.createElement('ul')
-      // TODO TODO TODO
+      this.cardSetElements.forEach(element => {
+        let li = document.createElement('li')
+        li.appendChild(element)
+        ul.appendChild(li)
+      })
+      userCell.appendChild(ul)
     }
   }
 
+  publicOut.update()
   return publicOut
 }
