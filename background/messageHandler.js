@@ -1,5 +1,6 @@
+// TODO: Strings object?  MessageHandler.log?
 chrome.runtime.onMessage.addListener((request,sender,respond)  => {
-  console.log('[i] Received message:')
+  console.log('messageHandler: [i] Received message:')
   console.dir(request)
   let modules = {
     db: chromeStorageHandler
@@ -11,15 +12,19 @@ chrome.runtime.onMessage.addListener((request,sender,respond)  => {
     modules.hasOwnProperty(module) &&
     modules[module].hasOwnProperty(command)
   ) {
-    console.log('[i] Processing "${request.cmd}"')
+    console.log(`messageHandler: [i] Processing: ${request.cmd}`)
     let arguments = request.args || []
     modules[module][command](...arguments)
-      .then(data => respond(data))
+      .then(data => {
+        console.log(`messageHandler: [+] Returning:`)
+        console.dir(data)
+        respond(data)
+      })
   } else {
-    console.log('[-] Command not recognized')
+    console.log('messageHandler: [-] Command not recognized')
     respond({error: 'Unknown Command'})
   }
   return true
 })
 
-console.log('[+] messageHandler running...')
+console.log('messageHandler: [+] running...')

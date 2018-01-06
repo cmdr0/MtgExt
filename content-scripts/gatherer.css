@@ -1,0 +1,18 @@
+.rightCol {
+  width: 400px !important;
+}
+.rightCol td {
+  padding: 4px;
+  text-align: left;
+}
+
+/* Overwrites of original CSS */
+.mainContainer {
+  width: 950px !important;
+}
+.cardList {
+  width: 950px !important;
+}
+.cardItemTable {
+  width: 950px !important;
+}

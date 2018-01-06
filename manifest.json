@@ -8,7 +8,11 @@
     "content_scripts": [
         {
             "matches": ["http://gatherer.wizards.com/Pages/Search/Default.aspx*"],
-            "js":      ["gatherer.js"]
+            "css":     ["content-scripts/gatherer.css"],
+            "js":      [
+              "content-scripts/model/StandardCardEntry.js",
+              "content-scripts/gatherer.js"
+            ]
         }
     ],
 

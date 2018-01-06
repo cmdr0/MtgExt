@@ -67,7 +67,7 @@ let chromeStorageHandler = (_ => {
 
     binCard: async function (multiverseID, binName) {
       try {
-        addBin(binName)
+        this.addBin(binName)
         let cardLocations = await this.getCardLocations(multiverseID)
         cardLocations.push(binName)
         await syncSet(multiverseID, cardLocations)
@@ -94,7 +94,7 @@ let chromeStorageHandler = (_ => {
 
     moveCard: async function (multiverseID, oldBinName, newBinName) {
       try {
-        addBin(newBinName)
+        this.addBin(newBinName)
         let cardLocations = await this.getCardLocations(multiverseID)
         let index = cardLocations.indexOf(oldBinName)
         if (index == -1) throw new Error("Bin '"+oldBinName+"' not attached to ID '"+multiverseID+"'")
