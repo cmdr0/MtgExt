@@ -1,12 +1,13 @@
-.rightCol {
-  width: 400px !important;
-}
 .rightCol td {
+  min-width: 20px;
   padding: 4px;
   text-align: left;
 }
 
 /* Overwrites of original CSS */
+.rightCol {
+  width: 400px !important;
+}
 .mainContainer {
   width: 950px !important;
 }

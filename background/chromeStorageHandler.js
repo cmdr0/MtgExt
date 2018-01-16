@@ -1,4 +1,4 @@
-let chromeStorageHandler = (_ => {
+let chromeStorageHandler = (() => {
 
   let syncGet = function(key) {
     return new Promise (function (resolve, reject) {
@@ -58,6 +58,7 @@ let chromeStorageHandler = (_ => {
     getCardLocations: async function (multiverseID) {
       try {
         let out = await syncGet(multiverseID) || []
+        out.sort()
         return out
       } catch (error) {
         logError(error)

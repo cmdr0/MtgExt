@@ -8,50 +8,78 @@ function StandardViewCardEntry (rowElement) {
     }
   }
 
+  // TODO: Factor out into model
   function InventoryTable (setEntry) {
-    let table = document.createElement('table')
-    let topRow = (() => {
-      let tr = document.createElement('tr')
-      let setIconCell = document.createElement('td')
-        setIconCell.appendChild(setEntry.element)
-      let setNameCell = document.createElement('td')
-        setNameCell.innerText = setEntry.name
-      tr.appendChild(setIconCell)
-      tr.appendChild(setNameCell)
-      return tr
-    })()
-    let bottomRow = (() => {
-      let tr = document.createElement('tr')
-      let firstCell = document.createElement('td')
-      let secondCell = document.createElement('td')
-        secondCell.innerText = '--- SPACE RESERVED ---'
-      tr.appendChild(firstCell)
-      tr.appendChild(secondCell)
-      return tr
-    })()
-    table.appendChild(topRow)
-    table.appendChild(bottomRow)
-    chrome.runtime.sendMessage({cmd:'db getCardLocations', args:[setEntry.multiverseID]}, bins => {
-      // Returns an object with bin counts
-      let binCounts = (() => {
-        let out = {}
-        bins.forEach(bin => {out[bin] = (out[bin] || 0) + 1})
-        return out
-      })()
+
+    let dropdown = new Gui.BinDropdown()
+    messageSender.send({cmd:'db getBins'})
+      .then(bins => {
+        if (!bins) return // TODO: Error handle
+        dropdown.update(bins)
+      })
+
+    let binButton = new Gui.Button('+', e => {
+      let binValue = dropdown.selectedValue()
+      if (!binValue) return console.log(`ERROR: BinValue: ${binValue}`)// TODO: Error handle
+      messageSender.send(
+        {cmd:'db binCard', args:[setEntry.multiverseID, binValue]}
+      ).then(response => {
+        if (!response) return // TODO: Error handle
+        update()
+      })
+    })
+
+    let table = new Gui.Table([
+      new Gui.TableRow([
+        new Gui.TableCell(setEntry.element),
+        new Gui.TableCell(setEntry.name, 3)
+      ]),
+      new Gui.TableRow([
+        new Gui.TableCell(''),
+        new Gui.TableCell(''),
+        new Gui.TableCell(binButton),
+        new Gui.TableCell(dropdown)
+      ])
+    ])
+
+    messageSender.send(
+      {cmd:'db getCardLocations', args:[setEntry.multiverseID]}
+    ).then(bins => {
+      let binCounts = {}
+      bins.forEach(bin => {binCounts[bin] = (binCounts[bin] || 0) + 1})
       for (bin in binCounts) {
-        let countRow = (() => {
-          let tr = table.insertRow(1)
-          let qtyCell = document.createElement('td')
-            qtyCell.innerText = binCounts[bin]
-          let binCell = document.createElement('td')
-            binCell.innerText = bin
-          tr.appendChild(qtyCell)
-          tr.appendChild(binCell)
-          return tr
-        })()
-        table.insertRow()
+        let binByValue = bin
+
+        let removeButton = new Gui.Button('-', e => {
+          messageSender.send(
+            {cmd:'db removeCard', args:[setEntry.multiverseID, binByValue]}
+          ).then(response => {
+            if (!response) return // TODO: Error handle
+            update()
+          })
+        })
+
+        let addButton = new Gui.Button('+', e => {
+          messageSender.send(
+            {cmd:'db binCard', args:[setEntry.multiverseID, binByValue]}
+          ).then(response => {
+            if (!response) return // TODO: Error handle
+            update()
+          })
+        })
+
+        table.insertBefore(
+          new Gui.TableRow([
+            new Gui.TableCell(removeButton),
+            new Gui.TableCell(binCounts[bin]),
+            new Gui.TableCell(addButton),
+            new Gui.TableCell(bin)
+          ]),
+          table.lastChild
+        )
       }
     })
+
     return table
   }
 
@@ -63,6 +91,8 @@ function StandardViewCardEntry (rowElement) {
     return out
   })()
 
+  // TODO: Yeah, unfuck this so it updates instead of re-creating everything
+  // Currently makes an obnoxious 'blink' for every action
   let update = () => {
     setsCell.innerHTML = ''
     setEntries.forEach(setEntry => {

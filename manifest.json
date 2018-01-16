@@ -11,12 +11,21 @@
             "css":     ["content-scripts/gatherer.css"],
             "js":      [
               "content-scripts/model/StandardCardEntry.js",
+              "content-scripts/model/GuiElements.js",
+              "content-scripts/messageSender.js",
               "content-scripts/gatherer.js"
+            ]
+        },
+        {
+            "matches": ["http://gatherer.wizards.com/Pages/Default.aspx"],
+            "css":     ["content-scripts/mainPage.css"],
+            "js":      [
+              "content-scripts/model/GuiElements.js",
+              "content-scripts/messageSender.js",
+              "content-scripts/mainPage.js"
             ]
         }
     ],
-
-    "browser_action": {},
 
     "background": {
         "scripts": [
