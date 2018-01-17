@@ -19,9 +19,13 @@ messageSender.send({cmd:'db getBins'})
   })
 dropdown.style.width = '100%'
 
+// TODO: Refactor this out eventually
 let fileSelect = new Gui.FileSelect(evt => {
   let binValue = dropdown.selectedValue()
-  if (!binValue) return console.log(`ERROR: BinValue: ${binValue}`)
+  if (!binValue) {
+    evt.target.value = null
+    return console.log(`ERROR: BinValue: ${binValue}`)
+  }
 
   let file = evt.target.files[0]
   if (!file) return
@@ -30,14 +34,36 @@ let fileSelect = new Gui.FileSelect(evt => {
   reader.onload = e => {
     let contents = e.target.result
     handleFile(contents)
+    evt.target.files = null
   }
   reader.readAsText(file)
 })
 fileSelect.style.width = '100%'
 
 function handleFile (contents) {
-  console.log(contents)
+  let cards = getObjectsFromCSV(contents)
+  cards.forEach(card => {
+    messageSender.send(
+      {cmd:'db binCard', args:[card.MultiverseID, dropdown.selectedValue()]}
+    )
+  })
 }
+
+function getObjectsFromCSV (contents) {
+  let array = contents.split('\n')
+  let header = array.shift()
+  headers = header.split(' | ')
+  array = array.map(card => {
+    let out = {}
+    cardValues = card.split(' | ')
+    headers.forEach((key, index) => {
+      out[key] = cardValues[index]
+    })
+    return out
+  })
+  return array
+}
+// End Refactor
 
 let table = new Gui.Table([
   new Gui.TableRow([

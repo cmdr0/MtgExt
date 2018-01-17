@@ -1,0 +1,20 @@
+1 ) Because of image variations on basic lands, the search screen does not
+accurately show inventory for these.
+FIX ACTION: None yet
+
+2 ) Add bin is non-existent
+FIX ACTION: Adding bins will start as a console function and will eventually have
+a dedicated button on the main page
+
+3 ) Remove bin is non-existent
+FIX ACTION: Same as add bin, but this will take longer, as I have to plan whether to have the bin
+'move' all the cards to another location (such as 'Unbinned'), or remove them
+from the inventory system entirely, though I'm leaning toward the latter.
+
+4 ) No error checking on mass upload
+FIX ACTION: None yet
+
+FORWARD FEATURES:
+Add Bin
+Remove Bin
+Bin Reconcile Sheet Generator
